@@ -1,0 +1,6 @@
+/.idea
+/build
+chats.json
+known.json
+/node_modules
+servers.json
