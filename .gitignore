@@ -4,3 +4,4 @@ chats.json
 known.json
 /node_modules
 servers.json
+.env
