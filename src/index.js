@@ -1,7 +1,4 @@
-﻿import dotenv from 'dotenv';
-
-dotenv.config();
-import fs from 'fs';
+﻿import fs from 'fs';
 import * as api from './api';
 import * as bot from './telegram';
 import Table from 'cli-table'
