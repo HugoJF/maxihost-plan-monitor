@@ -3,11 +3,12 @@ import * as api from './api';
 import * as bot from './telegram';
 import Table from 'cli-table'
 import TelegramBot from 'node-telegram-bot-api';
+import {register} from "./servers";
 
 let servers = [];
 let known = [];
 
-bot.boot();
+// bot.boot();
 
 if (fs.existsSync('known.json')) {
     let knownFile = fs.readFileSync('known.json', 'utf8');
@@ -16,7 +17,32 @@ if (fs.existsSync('known.json')) {
 
 async function updateData() {
     servers = await api.servers();
-    processData();
+
+    let ops = register(servers);
+    let now = (new Date).toISOString();
+
+    console.log(`#### Report ${now} ####`);
+    let {added, removed, modified} = ops;
+
+    for (let [id, server] of Object.entries(added)) {
+        console.log(`Server #${id} added.`);
+    }
+
+    for (let [id, server] of Object.entries(removed)) {
+        console.log(`Server #${id} sold.`);
+    }
+
+    for (let [id, {added, removed, modified}] of Object.entries(modified)) {
+        if(Object.keys(modified).length === 0) return;
+        
+        console.log(`Server #${id} modified:`);
+        for (let [key, value] of Object.entries(modified)) {
+            let {from, to} = value;
+            console.log(`\t- ${key} from ${from} to ${to}`);
+        }
+    }
+
+    // processData();
 }
 
 function processData() {
@@ -88,4 +114,4 @@ function processData() {
 }
 
 updateData();
-setInterval(updateData, 60 * 1000);
+setInterval(updateData, 2 * 1000);

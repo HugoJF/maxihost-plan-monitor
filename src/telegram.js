@@ -1,11 +1,12 @@
 import fs from "fs";
 import TelegramBot from "node-telegram-bot-api";
 
-const token = process.env.TELEGRAM_API_KEY;
-const bot = new TelegramBot(token, {polling: true});
+let bot;
 let chats = [];
 
 export async function boot() {
+    bot = new TelegramBot(process.env.TELEGRAM_API_KEY, {polling: true});
+
     if (fs.existsSync('chats.json')) {
         let chatsFile = fs.readFileSync('chats.json', 'utf8');
         chats = JSON.parse(chatsFile);
